@@ -1,0 +1,40 @@
+/**
+ * @file layout.css
+ * Убирает боковые отступы у сообщений и заставляет аватар "плавать" 
+ * слева, чтобы текст обтекал его и использовал всю ширину экрана.
+ */
+
+body.mobilyze-active .mes {
+    padding-left:  0 !important;
+    padding-right: 0 !important;
+}
+
+body.mobilyze-active .mes_block {
+    padding-left:  0 !important;
+    padding-right: 0 !important;
+}
+
+body.mobilyze-active.mobilyze-wrap-active:not(.echostyle):not(.whisperstyle):not(.ripplestyle):not(.hushstyle):not(.tidestyle) .mes {
+    display: flow-root !important;
+}
+
+body.mobilyze-active.mobilyze-wrap-active:not(.echostyle):not(.whisperstyle):not(.ripplestyle):not(.hushstyle):not(.tidestyle) .mes_block {
+    overflow: visible !important;
+}
+
+body.mobilyze-active.mobilyze-wrap-active:not(.echostyle):not(.whisperstyle):not(.ripplestyle):not(.hushstyle):not(.tidestyle) .mesAvatarWrapper {
+    float:          left;
+    margin:         0 10px 10px 10px;
+    padding-bottom: 10px;
+}
+
+body.mobilyze-active .mes_block .mes_text {
+    padding-left:  23px !important;
+    padding-right: 25px !important;
+    margin-left:   0    !important;
+    margin-right:  0    !important;
+}
+
+body.mobilyze-active.documentstyle #chat .mes .mes_block {
+    margin-right: 0 !important;
+}
