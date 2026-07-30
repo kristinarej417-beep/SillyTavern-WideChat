@@ -1,0 +1,41 @@
+/* Переопределяем системную ширину */
+:root {
+    --chatWidth: 100% !important;
+    --chat-width: 100% !important;
+}
+
+/* Растягиваем родительские контейнеры чата */
+#form_sheld, #sheld, .sheld, #chat-container, #chat {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+}
+
+/* Растягиваем сообщение */
+.mes {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+}
+
+/* Настраиваем текстовый блок под аватаркой */
+.mes_block {
+    position: relative !important;
+    flex: 1 !important;
+    min-width: 0 !important;
+    width: auto !important;
+    max-width: 100% !important;
+    padding-bottom: 45px !important; /* Резервируем место под кнопки внизу */
+    padding-right: 15px !important; /* Убираем пустую полосу справа */
+    padding-left: 10px !important;
+    box-sizing: border-box !important;
+}
