@@ -1,8 +1,8 @@
 (function() {
-    console.log("WideChat Mobile with MutationObserver loaded!");
+    console.log("WideChat Mobile (Custom Pinned Mode) loaded!");
 
-    function forceWideChat() {
-        // 1. Принудительно выставляем системные переменные ширины в 100%
+    function forceWideLayout() {
+        // 1. Принудительно выставляем системные CSS-переменные ширины в 100%
         document.documentElement.style.setProperty('--chatWidth', '100%', 'important');
         document.documentElement.style.setProperty('--chat-width', '100%', 'important');
 
@@ -13,6 +13,7 @@
             sheld.style.setProperty('max-width', '100vw', 'important');
             sheld.style.setProperty('left', '0px', 'important');
             sheld.style.setProperty('right', '0px', 'important');
+            sheld.style.setProperty('margin', '0px', 'important');
         }
 
         // 3. Растягиваем внутренний контейнер сообщений
@@ -30,15 +31,9 @@
         }
     }
 
-    // Создаем Наблюдатель, который будет следить за изменениями страницы в реальном времени
-    const observer = new MutationObserver(forceWideChat);
-    observer.observe(document.documentElement, {
-        childList: true,
-        subtree: true,
-        attributes: true,
-        attributeFilter: ['style', 'class']
-    });
+    // Запускаем скрипт каждые 100мс (0.1 сек), чтобы намертво заблокировать любые попытки ИИ сжать чат
+    setInterval(forceWideLayout, 100);
 
-    // Запускаем первично при загрузке
-    forceWideChat();
+    // Первичный запуск на старте
+    forceWideLayout();
 })();
