@@ -1,0 +1,62 @@
+/**
+ * @file theme.css
+ * Визуальная тема сообщений: шрифт, цвета, положение кнопок действий.
+ * Работает независимо от переключателя расширения.
+ */
+
+/* --- Перенос кнопок действий в правый нижний угол сообщения --- */
+.mes_block {
+    position:       relative !important;
+    padding-bottom: 45px     !important;
+    box-sizing:     border-box !important;
+}
+
+.mes_buttons {
+    position:       absolute !important;
+    bottom:         8px  !important;
+    right:          15px !important;
+    top:            auto !important;
+    left:           auto !important;
+    display:        flex !important;
+    flex-direction: row  !important;
+    gap:            8px  !important;
+}
+
+/* --- Шрифт и цвета текста сообщений --- */
+.mes_text {
+    font-family:    "Plus Jakarta Sans", "Segoe UI", "Roboto", sans-serif !important;
+    color:          #E2E8F0 !important;
+    font-size:      14px    !important;
+    line-height:    1.6     !important;
+    letter-spacing: -0.01em !important;
+}
+
+/* Прямая речь (диалоги в кавычках) */
+.mes_text q {
+    color:       #E2E8F0 !important;
+    font-style:  normal  !important;
+}
+
+/* Действия (текст в звёздочках / курсив) */
+.mes_text em {
+    color:      #94A3B8 !important;
+    font-style: italic  !important;
+}
+
+/* Блок скрытых мыслей (Thought for some time) */
+.mes_text details {
+    background-color: rgba(0, 0, 0, 0.3)          !important;
+    border:           1px solid rgba(255,255,255,0.05) !important;
+    border-radius:    8px  !important;
+    padding:          10px !important;
+    margin:           10px 0 !important;
+}
+
+/* Заголовок блока мыслей */
+.mes_text summary {
+    font-family: "Inter", sans-serif !important;
+    color:       #64748B !important;
+    font-weight: 600     !important;
+    font-size:   13px    !important;
+    cursor:      pointer !important;
+}
