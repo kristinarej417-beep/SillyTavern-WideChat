@@ -1,41 +1,68 @@
-/* Переопределяем системную ширину */
-:root {
-    --chatWidth: 100% !important;
-    --chat-width: 100% !important;
-}
+/* СНАЧАЛА ИМПОРТ ШРИФТОВ (СТРОГО НА ПЕРВОЙ СТРОКЕ) */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans&display=swap');
 
-/* Растягиваем родительские контейнеры чата */
-#form_sheld, #sheld, .sheld, #chat-container, #chat {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 100% !important;
-    left: 0 !important;
-    right: 0 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    box-sizing: border-box !important;
-}
-
-/* Растягиваем сообщение */
-.mes {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    box-sizing: border-box !important;
-    display: flex !important;
-}
-
-/* Настраиваем текстовый блок под аватаркой */
+/* --- 1. ПЕРЕНОС КНОПОК ДЕЙСТВИЙ В САМЫЙ НИЗ И ОТСТУПЫ --- */
 .mes_block {
     position: relative !important;
-    flex: 1 !important;
-    min-width: 0 !important;
-    width: auto !important;
+    flex: 1 !important; /* Умное заполнение пространства справа от аватарки */
+    min-width: 0 !important; /* Предотвращает уход текста за край экрана */
+    width: auto !important; 
     max-width: 100% !important;
-    padding-bottom: 45px !important; /* Резервируем место под кнопки внизу */
-    padding-right: 15px !important; /* Убираем пустую полосу справа */
+    padding-bottom: 45px !important; /* Место для кнопок снизу */
+    padding-right: 15px !important; /* Ровный отступ от правого края экрана */
     padding-left: 10px !important;
     box-sizing: border-box !important;
+}
+
+.mes_buttons {
+    position: absolute !important;
+    bottom: 8px !important;
+    right: 15px !important;
+    top: auto !important;
+    left: auto !important;
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 8px !important;
+}
+
+/* --- 2. СТИЛИЗАЦИЯ ПОД МИНИМАЛИЗМ JANITORAI И ШРИФТ PLUS JAKARTA SANS --- */
+.mes_text {
+    font-family: "Plus Jakarta Sans", "Segoe UI", "Roboto", sans-serif !important; 
+    color: #E2E8F0 !important; 
+    font-size: 14px !important; 
+    line-height: 1.6 !important; 
+    letter-spacing: -0.01em !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+/* Прямая речь (Диалоги в кавычках) */
+.mes_text q {
+    color: #E2E8F0 !important; 
+    font-style: normal !important;
+}
+
+/* Действия (Текст в звездочках / курсив) */
+.mes_text em {
+    color: #94A3B8 !important; 
+    font-style: italic !important;
+}
+
+/* Блок скрытых мыслей (Thought for some time) */
+.mes_text details {
+    background-color: rgba(0, 0, 0, 0.3) !important; 
+    border: 1px solid rgba(255, 255, 255, 0.05) !important; 
+    border-radius: 8px !important;
+    padding: 10px !important;
+    margin: 10px 0 !important;
+}
+
+/* Заголовок блока мыслей */
+.mes_text summary {
+    font-family: "Inter", sans-serif !important;
+    color: #64748B !important; 
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    cursor: pointer !important;
 }
