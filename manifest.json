@@ -1,0 +1,8 @@
+{
+    "name": "WideChat Mobile",
+    "author": "kkkk",
+    "description": "Forces 100% width on mobile screens without hiding any menus.",
+    "version": "1.0.0",
+    "js": ["index.js"],
+    "css": ["style.css"]
+}
