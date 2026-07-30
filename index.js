@@ -1,39 +1,73 @@
-(function() {
-    console.log("WideChat Mobile (Custom Pinned Mode) loaded!");
+'use strict';
 
-    function forceWideLayout() {
-        // 1. Принудительно выставляем системные CSS-переменные ширины в 100%
-        document.documentElement.style.setProperty('--chatWidth', '100%', 'important');
-        document.documentElement.style.setProperty('--chat-width', '100%', 'important');
+import { eventSource, event_types } from '../../../../script.js';
+import { initSettings, getSettings } from './settings.js';
+import { log, setVerbose } from './logger.js';
 
-        // 2. Растягиваем главный каркас мобильной оболочки чата
-        const sheld = document.getElementById('sheld');
-        if (sheld) {
-            sheld.style.setProperty('width', '100vw', 'important');
-            sheld.style.setProperty('max-width', '100vw', 'important');
-            sheld.style.setProperty('left', '0px', 'important');
-            sheld.style.setProperty('right', '0px', 'important');
-            sheld.style.setProperty('margin', '0px', 'important');
+const MODULE            = 'core';
+const CLASS_ACTIVE      = 'mobilyze-active';
+const CLASS_WRAP        = 'mobilyze-wrap-active';
+const WIDTH_BREAKPOINT  = 1000;
+
+let _isActive = false;
+
+function isWideViewport() {
+    return window.innerWidth >= WIDTH_BREAKPOINT;
+}
+
+function syncActivationState() {
+    const settings = getSettings();
+    const shouldBeActive = settings.enabled
+        && !(settings.disableOnWideScreens && isWideViewport());
+    if (shouldBeActive && !_isActive) activate();
+    else if (!shouldBeActive && _isActive) deactivate();
+}
+
+function syncWrapState() {
+    const settings = getSettings();
+    const shouldWrap = settings.enabled && settings.enableTextWrap;
+    document.body.classList.toggle(CLASS_WRAP, !!shouldWrap);
+    log(MODULE, 'Wrap state synced', { active: shouldWrap });
+}
+
+function onResize() {
+    syncActivationState();
+}
+
+function activate() {
+    if (_isActive) return;
+    _isActive = true;
+    document.body.classList.add(CLASS_ACTIVE);
+    syncWrapState();
+    window.addEventListener('resize', onResize);
+    log(MODULE, 'Activated');
+}
+
+function deactivate() {
+    if (!_isActive) return;
+    _isActive = false;
+    document.body.classList.remove(CLASS_ACTIVE);
+    document.body.classList.remove(CLASS_WRAP);
+    window.removeEventListener('resize', onResize);
+    log(MODULE, 'Deactivated');
+}
+
+jQuery(async () => {
+    await initSettings(
+        () => syncActivationState(),
+        (debugEnabled) => setVerbose(debugEnabled),
+        () => {
+            syncActivationState();
+            if (_isActive) syncWrapState();
         }
+    );
 
-        // 3. Растягиваем внутренний контейнер сообщений
-        const chatContainer = document.getElementById('chat-container');
-        if (chatContainer) {
-            chatContainer.style.setProperty('width', '100%', 'important');
-            chatContainer.style.setProperty('max-width', '100%', 'important');
-        }
+    const settings = getSettings();
+    setVerbose(settings.debugLogging);
 
-        // 4. Растягиваем само окно чата
-        const chat = document.getElementById('chat');
-        if (chat) {
-            chat.style.setProperty('width', '100%', 'important');
-            chat.style.setProperty('max-width', '100%', 'important');
-        }
+    if (settings.enabled) {
+        eventSource.once(event_types.APP_READY, () => {
+            syncActivationState();
+        });
     }
-
-    // Запускаем скрипт каждые 100мс (0.1 сек), чтобы намертво заблокировать любые попытки ИИ сжать чат
-    setInterval(forceWideLayout, 100);
-
-    // Первичный запуск на старте
-    forceWideLayout();
-})();
+});
