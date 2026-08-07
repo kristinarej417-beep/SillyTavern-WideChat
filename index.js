@@ -31,4 +31,82 @@ function syncWrapState() {
 }
 
 function onResize() {
-    syncAct
+    syncActivationState();
+}
+
+function activate() {
+    if (_isActive) return;
+    _isActive = true;
+    document.body.classList.add(CLASS_ACTIVE);
+    syncWrapState();
+    window.addEventListener('resize', onResize);
+    log(MODULE, 'Activated');
+}
+
+function deactivate() {
+    if (!_isActive) return;
+    _isActive = false;
+    document.body.classList.remove(CLASS_ACTIVE);
+    document.body.classList.remove(CLASS_WRAP);
+    window.removeEventListener('resize', onResize);
+    log(MODULE, 'Deactivated');
+}
+
+// --- Спойлер для дополнительных кнопок сообщения ---
+// Работает независимо от переключателя WideChat.
+function initButtonSpoiler() {
+    function reorganize(mesButtons) {
+        if (mesButtons.dataset.reorganized) return;
+        const extra = mesButtons.querySelector('.extraMesButtons');
+        if (!extra) return;
+        mesButtons.dataset.reorganized = 'true';
+
+        const edit = mesButtons.querySelector('.mes_edit');
+        const copy = extra.querySelector('.mes_copy');
+        const translate = extra.querySelector('.mes_magic_translation_button');
+
+        const details = document.createElement('details');
+        details.className = 'custom_extra_details';
+        const summary = document.createElement('summary');
+        summary.className = 'custom_expand_toggle';
+        summary.title = 'Ещё действия';
+        details.appendChild(summary);
+        details.appendChild(extra);
+
+        // Явно задаём порядок: edit -> copy -> globe -> "..."
+        if (edit) mesButtons.appendChild(edit);
+        if (copy) mesButtons.appendChild(copy);
+        if (translate) mesButtons.appendChild(translate);
+        mesButtons.appendChild(details);
+    }
+
+    const observer = new MutationObserver(() => {
+        document.querySelectorAll('.mes_buttons:not([data-reorganized])').forEach(reorganize);
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+    document.querySelectorAll('.mes_buttons').forEach(reorganize);
+
+    log(MODULE, 'Button spoiler initialized');
+}
+
+jQuery(async () => {
+    await initSettings(
+        () => syncActivationState(),
+        (debugEnabled) => setVerbose(debugEnabled),
+        () => {
+            syncActivationState();
+            if (_isActive) syncWrapState();
+        }
+    );
+
+    const settings = getSettings();
+    setVerbose(settings.debugLogging);
+
+    if (settings.enabled) {
+        eventSource.once(event_types.APP_READY, () => {
+            syncActivationState();
+        });
+    }
+
+    initButtonSpoiler();
+});
