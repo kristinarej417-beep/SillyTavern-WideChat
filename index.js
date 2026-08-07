@@ -52,6 +52,35 @@ function deactivate() {
     log(MODULE, 'Deactivated');
 }
 
+// --- Спойлер для дополнительных кнопок сообщения ---
+// Работает независимо от переключателя WideChat.
+function initButtonSpoiler() {
+    function addToggle(mesButtons) {
+        if (mesButtons.dataset.hasToggle) return;
+        const extra = mesButtons.querySelector('.extraMesButtons');
+        if (!extra) return;
+        mesButtons.dataset.hasToggle = 'true';
+
+        const toggle = document.createElement('div');
+        toggle.className = 'mes_button custom_expand_toggle fa-solid fa-ellipsis interactable';
+        toggle.title = 'Ещё действия';
+        toggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            mesButtons.classList.toggle('expanded');
+        });
+
+        mesButtons.appendChild(toggle);
+    }
+
+    const observer = new MutationObserver(() => {
+        document.querySelectorAll('.mes_buttons:not([data-has-toggle])').forEach(addToggle);
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+    document.querySelectorAll('.mes_buttons').forEach(addToggle);
+
+    log(MODULE, 'Button spoiler initialized');
+}
+
 jQuery(async () => {
     await initSettings(
         () => syncActivationState(),
@@ -70,4 +99,6 @@ jQuery(async () => {
             syncActivationState();
         });
     }
+
+    initButtonSpoiler();
 });
