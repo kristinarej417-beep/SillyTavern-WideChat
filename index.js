@@ -55,28 +55,36 @@ function deactivate() {
 // --- Спойлер для дополнительных кнопок сообщения ---
 // Работает независимо от переключателя WideChat.
 function initButtonSpoiler() {
-    function addToggle(mesButtons) {
-        if (mesButtons.dataset.hasToggle) return;
+    function reorganize(mesButtons) {
+        if (mesButtons.dataset.reorganized) return;
         const extra = mesButtons.querySelector('.extraMesButtons');
         if (!extra) return;
-        mesButtons.dataset.hasToggle = 'true';
+        mesButtons.dataset.reorganized = 'true';
 
-        const toggle = document.createElement('div');
-        toggle.className = 'mes_button custom_expand_toggle fa-solid fa-ellipsis interactable';
-        toggle.title = 'Ещё действия';
-        toggle.addEventListener('click', (e) => {
-            e.stopPropagation();
-            mesButtons.classList.toggle('expanded');
+        // Вытаскиваем copy и magic translate наружу, они всегда видны
+        ['.mes_copy', '.mes_magic_translation_button'].forEach(sel => {
+            const btn = extra.querySelector(sel);
+            if (btn) mesButtons.insertBefore(btn, extra);
         });
 
-        mesButtons.appendChild(toggle);
+        // Оборачиваем оставшееся в нативный <details>
+        const details = document.createElement('details');
+        details.className = 'custom_extra_details';
+
+        const summary = document.createElement('summary');
+        summary.className = 'custom_expand_toggle';
+        summary.title = 'Ещё действия';
+
+        extra.parentNode.insertBefore(details, extra);
+        details.appendChild(summary);
+        details.appendChild(extra);
     }
 
     const observer = new MutationObserver(() => {
-        document.querySelectorAll('.mes_buttons:not([data-has-toggle])').forEach(addToggle);
+        document.querySelectorAll('.mes_buttons:not([data-reorganized])').forEach(reorganize);
     });
     observer.observe(document.body, { childList: true, subtree: true });
-    document.querySelectorAll('.mes_buttons').forEach(addToggle);
+    document.querySelectorAll('.mes_buttons').forEach(reorganize);
 
     log(MODULE, 'Button spoiler initialized');
 }
