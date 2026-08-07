@@ -63,7 +63,6 @@ function initButtonSpoiler() {
 
         const edit = mesButtons.querySelector('.mes_edit');
         const copy = extra.querySelector('.mes_copy');
-        const translate = extra.querySelector('.mes_magic_translation_button');
 
         const details = document.createElement('details');
         details.className = 'custom_extra_details';
@@ -73,18 +72,28 @@ function initButtonSpoiler() {
         details.appendChild(summary);
         details.appendChild(extra);
 
-        // Явно задаём порядок: edit -> copy -> globe -> "..."
         if (edit) mesButtons.appendChild(edit);
         if (copy) mesButtons.appendChild(copy);
-        if (translate) mesButtons.appendChild(translate);
         mesButtons.appendChild(details);
+    }
+
+    function pinTranslate(mesButtons) {
+        const details = mesButtons.querySelector('.custom_extra_details');
+        if (!details) return;
+        const translate = details.querySelector('.mes_magic_translation_button');
+        if (!translate) return;
+        // Вставляем глобус сразу после copy (или после edit, если copy нет)
+        mesButtons.insertBefore(translate, details);
     }
 
     const observer = new MutationObserver(() => {
         document.querySelectorAll('.mes_buttons:not([data-reorganized])').forEach(reorganize);
+        document.querySelectorAll('.mes_buttons').forEach(pinTranslate);
     });
     observer.observe(document.body, { childList: true, subtree: true });
+
     document.querySelectorAll('.mes_buttons').forEach(reorganize);
+    document.querySelectorAll('.mes_buttons').forEach(pinTranslate);
 
     log(MODULE, 'Button spoiler initialized');
 }
